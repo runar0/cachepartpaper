@@ -1,3 +1,92 @@
 \section{Introduction}
 
-Cite \cite{utilityBasedCachePartitioning}.
+\magnus{Write introduction}
+
+Meta-analysis is common in other fields (i.e.\ medicine) but uncommon in computer architecture (Notable exceptions: \cite{microlib,comparingPrevalingSimulationTechniques,desmet10}).
+For mature research areas, they are necessary for navigating the complex research landscape.
+
+\magnus{Define the cache partitioning problem}
+
+Cache partitioning is a suitable field: A large body of work exists, and the subfield is becoming mature (first work early 2000s).
+Each author only compares to one or two other works and methodology differs: Unclear if science is actually progressing.
+
+Any resource management technique (like shared cache partitioning) consists of three components \cite{virtualPrivateMachines}: Policy, feedback mechanism and partitioning mechanism.
+We reviewed the literature, classified the previous works along these axes and found significant overlap.
+
+\magnus{Introduce the techniques we chose to compare quantitatively and present a plausible argument for why these were chosen}
+
+Our contributions:
+\begin{itemize}
+	\item A through literature survey of proposed cache partitioning techniques
+	\item Many techniques reuse components from other schemes: Our work is to our knowledge the first work to systematically report these overlaps
+	\item A quantitative comparison of selected techniques \magnus{Can we be bolder?}
+	\item We aim to provide our implementations to the research community
+\end{itemize}
+
+\section{Cache Partitioning Techniques}
+
+\begin{table*}[tp]
+	\caption{Cache Partitioning Technique Overview}
+	\label{tab:cachePartTaxonomy}
+	\begin{tabularx}{\textwidth}{llcXXX}
+	\toprule
+	Year & Scheme & Ref. & Policy & Feedback Mechanism & Partitioning Mechanism \\	
+	\midrule
+	2000 & Column Caching & \cite{columnCaching} & - & - & Column caching (first) \\
+	2002 & Suh et al. & \cite{suh02,dynPartofSharedCacheMemory} & Global miss minimization & Marginal gain counters (first) & Cache quota partitioning (first?) \\
+	2004 & Kim et al. & \cite{fairCacheSharingAndPartitioning} & Fairness & Marginal gain counters & Cache quota partitioning LRU \\
+	2004 & CQoS & \cite{cqos} & Priority-based & - & Set partitioning, selective cache allocation and heterogeneous cache regions \\
+	2006 & Utility Based Cache Partitioning (UCP) & \cite{utilityBasedCachePartitioning} & Global miss minimization & Auxiliary Tag Directory (ATD) & Way Partitioning \\ 
+	2006 & Dybdahl et al. & \cite{haakonHiPC} & Global miss minimization & ATD (called shadow tags) & Way partitioning \\
+	2006 & Settle et al. & \cite{dynReconfCache} & Reuse-based heuristics & Access and reuse counters & Column caching and LRU heuristic \\
+	2006 & Rafique et al. & \cite{osSupportForFairCacheSharing} & OS-based priorities and miss-rate equalization \cite{fairCacheSharingAndPartitioning} & Marginal gain counters and IPC & Way partitioning \\
+	2006 & Hsu et al. & \cite{sharedCachePolicies} & Equal share (Communist) and maximum total benefit (Utilitarian) & - & - \\
+	2006 & STATSHARE & \cite{petoumenos06} & OS: Minimize miss rate, maximize "usefulness", QoS  & Sampled, quantized reuse-distance histograms  & Replace decayed over non-decayed cache lines randomly\\
+	2007 & Cooperative Cache Partitioning (CCP) & \cite{cooperativeCachePartitioning} & Fair speedup and weighted speedup & - & Time-sharing \\
+	2007 & Guo et al. & \cite{qosInCMPs} & QoS with admission policy, resource stealing and speculative downgrade  & ATD & Way partitioning \\
+	2007 & Virtual Private Caches (VPC) & \cite{virtualPrivateCaches} & QoS with IPC targets, fairness policy distributes left-over resources & - & VPC Arbiter (based on network fair queuing) and VPC Capacity Manager (way partitioning) \\
+	2007 & Thread-Aware Dynamic Insertion Policy (TADIP) & \cite{jaleel08} & Global miss rate minimization & Set dueling \cite{shadowTagInsertionPolicies} & TADIP \\
+	2007 & Iyer et al. & \cite{qosPoliciesForCMP} & QoS: Static vs.\ dynamic & Shared unit utilization & Cache quota partitioning per QoS-level \\
+	2009 & FlexDCP & \cite{flexDCP} & OS-guided performance fairness & ATD & Column caching \\
+	2009 & Zhou et al. & \cite{zhou09} & Performance fairness (identical slowdowns) & Overlap counters and ATD & Overalloc counter and modified LRU \\
+	2009 & Promotion/Insertion Pseudo-Partitioning (PIPP) & \cite{xie09} & Global miss minimization & ATD & PIPP \\
+	2009 & SHARP Control & \cite{sharpControl} & Fair speedup and QoS & IPC target and miss rate models are input & Way partitioning \\
+	2010 & Re-Reference Interval Prediction (RRIP) & \cite{jaleel10} & Global miss minimization & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
+	2010 & Yu et al. & \cite{yu10} & Off-chip bandwidth minimization & Off-line profiling & Set partitioning \cite{ranganathan00}  \\
+	2010 & Xie et al. & \cite{xie10} & \toni{Fill out if needed} & & \\
+	2011 & Wang et al. & \cite{wang11} & Meet deadlines and minimize energy & Off-line profiling & Static way partitioning \\
+	2011 & NUcache & \cite{manikantan11} & Minimize global miss rate & DeliTrack and NUTrack & NUcache \\
+	2011 & Vantage & \cite{sanchez11} & Global miss minimization & ATD & Vantage \\
+	2012 & Cooperative Partitioning & \cite{sundararajan12} & Power-directed global miss minimization & ATD & Column caching variant for energy reduction \\
+	2012 & PriSM & \cite{manikantan12} & Global miss minimization, fairness and QoS & ATD and counters & PriSM \\
+	2012 & Duong et al. & \cite{duong12} & Global miss minimization & Reuse distance distributions &Protecting Distance replacement \\
+	2012 & Hasenplaugh et al. & \cite{hasenplaugh12} & Global miss minimization, IPC and QoS  & Gradient regions & Adaptive insertion policy \\
+	2013 & Albericio et al. & \cite{albericio13} & Global miss minimization (inclusive caches) & Reused bits and beeing-used bits & Least Recently Reused and Not Recently Reused \\
+	\bottomrule
+	\end{tabularx}	
+\end{table*}
+
+\textit{Note: Table \ref{tab:cachePartTaxonomy} is copy pasted from my previous manuscript and will have to be modified or possibly removed.}
+
+\runar{Add a condensed version of your background chapter here}
+
+\toni{Add the missing works after Runar has added his stuff}
+
+\textit{We should retrieve the number of citations of each work from Google Scholar.
+The older techniques we have implemented are likely cited a lot and then we can argue for why we selected the less cited works.}
+
+\section{Methodology}
+
+\runar{Add a condensed version of your methodology}
+
+\section{Results}
+
+\runar{Add your experiments, condensed}
+
+\section{Related Work}
+
+\toni{Dense discussion of works we did not cover earlier. (Do we even need this section?)}
+
+\section{Conclusion}
+
+\magnus{Write conclusion}

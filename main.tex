@@ -328,6 +328,15 @@
 % to submit to, of course. )
 
 
+%%%% Paper specific includes
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\usepackage{color}
+\newcommand{\magnus}[1]{{\color{red}{Magnus TODO: #1}}}
+\newcommand{\runar}[1]{{\color{blue}{Runar TODO: #1}}}
+\newcommand{\toni}[1]{{\color{green}{Toni TODO: #1}}}
+
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -340,7 +349,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Blapp}
+\title{Comparing Prevailing Shared Cache Partitioning Techniques}
 
 
 % author names and affiliations
@@ -522,13 +531,13 @@
 
 
 % use section* for acknowledgment
-\ifCLASSOPTIONcompsoc
+%\ifCLASSOPTIONcompsoc
   % The Computer Society usually uses the plural form
-  \section*{Acknowledgments}
-\else
+%  \section*{Acknowledgments}
+%\else
   % regular IEEE prefers the singular form
-  \section*{Acknowledgment}
-\fi
+ % \section*{Acknowledgment}
+%\fi
 
 
 % trigger a \newpage just before the given reference
