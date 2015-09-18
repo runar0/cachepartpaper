@@ -1,0 +1,37 @@
+Most Chip Multiprocessors (CMPs) share parts of the memory system to improve resource utilization.
+In particular, the last level cache (LLC) is commonly shared between processor cores.
+This design choice makes destructive cache interference possible which reduces performance and may cause problems such as missed deadlines, priority inversion, unpredictable interactive performance and non-compliance with service level agreements \cite{dubois13}.
+For this reason, computer architecture researchers have proposed a large number of microarchitectural techniques that partition the LLC between competing processes \magnus{add long list of citations}.
+Given the large amount of cache partitioning research, it is common to reuse previously proposed ideas in new schemes.
+Unfortunately, it can be hard to identify this reuse without understanding the work in detail.
+In this work, we systematically analyze the cache partitioning research field and identify overlap with the aim of helping future architects avoid reinventing the wheel.
+
+We loosely define the cache partitioning problem as the task of managing shared LLC capacity in a thread-aware manner with the aim of achieving a performance-related goal.
+We differentiate between \textit{explicit} and \textit{implicit} cache partitioning.
+In explicit cache partitioning, each running process is assigned an LLC quota which determines the minimum amount of cache space the process will have \magnus{add references to examples}.
+With implicit partitioning, LLC space is managed by process-aware LLC policies without assigning a specific quota to each process \magnus{add references to examples}.
+
+The first contribution of this work is a classification of previously proposed cache partitioning techniques.
+All cache partitioning techniques contain a \textit{policy} which defines the goal to be achieved with partitioning and \textit{mechanisms} that are the primitives used to implement the policy \cite{virtualPrivateMachines}.
+The two most common policies are to minimize the total number of LLC misses or to provide \textit{Quality of Service (QoS)} by ensuring that the performance of one or more processes is kept above a certain level.
+Cache partitioning techniques also commonly use a \textit{feedback} mechanism and a \textit{partitioning} mechanism.
+\magnus{Will splitting the partitioning mechanism into partitioning and enforcement simplify the arguments?}
+The feedback mechanism gathers information regarding the cache requirements of the currently running processes while the partitioning mechanism is used to select and enforce partitions (explicitly or implicitly).
+Examples of feedback mechanisms are \textit{Auxilliary Tag Directories (ATDs)} \cite{utilityBasedCachePartitioning,haakonHiPC} and marginal gain counters \cite{dynPartofSharedCacheMemory,suh02} and examples of partitioning mechanisms are way partitioning  \cite{utilityBasedCachePartitioning} and modified promotion and insertion policies (e.g.\ \cite{xie09}).
+
+The main observation resulting from this classification is that almost all proposed cache partitioning techniques apply previously proposed ideas in some form.
+For instance, the ATD feedback mechanism has been used extensively \magnus{add complete list of citations}.
+This is not surprising given the large number of proposed techniques targeting cache partitioning, but for science to progress it is critical that these overlaps are clearly identified.
+This work is to the best of our knowledge the first to systematically classify the policies and mechanisms used in previous cache partitioning schemes.
+Thus, our classification scheme enable architects to clearly separate their novel ideas from previous work.
+
+The second contribution of this work is a quantitative instigation of the performance of 5 high-impact cache partitioning techniques that collectively cover the current design space of miss minimizing partitioning techniques targeted at monolithic LLCs \magnus{verify that this is correct}.
+Concretely, we implemented TADIP \cite{jaleel08}, DRRIP \cite{jaleel10}, UCP \cite{utilityBasedCachePartitioning}, PIPP \cite{xie09} and PriSM \cite{manikantan12}.
+The baseline is a conventional LRU-managed shared LLC.
+\magnus{What did we find?}
+\magnus{Add the progression over time plot here?}
+We aim to provide our implementations to the research community.
+
+\magnus{Add outline of the work? Do we need it?}
+
+% Previous "meta analyses", can we get them in somewhere: \cite{microlib,comparingPrevalingSimulationTechniques,desmet10}).
