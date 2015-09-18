@@ -1,0 +1,221 @@
+\subsection{LRU}
+
+Least Recently Used (LRU) replacement, or some simplification of LRU, is one of the dominant cache management algorithms in hardware today. 
+As a result, LRU is normally used as the baseline for comparisons when presenting new cache management algorithms~\cite{Jaleel2010,Qureshi2006,Qureshi2007}.
+
+The LRU algorithm relies on temporal locality of cache accesses; recently accessed data will have a higher chance of reuse than less recently used data.
+Theoretically one can envision a cache set managed by LRU as a stack, where recently accessed cache blocks are near the top and less recently accessed blocks are near the bottom.
+The bottom position of the stack is the LRU position, and the top position is the MRU position.
+The replacement policy of LRU is to evict the least recently used cache block, the one on the bottom of the LRU stack.
+The insertion and promotion policy of LRU is the same; a inserted or accessed block is always moved to the MRU position unless it is already there.
+In a hardware implementation, the blocks are not stored in a sorted fashion, but additional storage bits are used to keep track of LRU positions.
+
+An important consequence of the LRU algorithm is that it satisfies the \textit{stack property}.
+Considering two LRU managed caches, with 4- and 3-ways.
+If both caches handle the same memory sequence, we know that the state of the upper three ways in both caches will be identical.
+This because new and promoted blocks always enter at the top of the stack, and only the block at the bottom of the stack will be evicted.
+Several algorithms make use of this property to count the number of cache misses in LRU managed caches of varying size.
+In a 4-way cache, if we count the number of accesses to blocks at each way we can deduce the number of misses of any cache smaller than 4-ways. 
+For a 3-way cache, the number of misses is the same as the number of misses in the 4-way cache plus the number of accesses to the fourth way.
+
+\subsection{DIP}
+
+Dynamic Insertion Policy (DIP)~\cite{Qureshi2007} was originally proposed in 2007.
+Like LRU, the DIP algorithm view the cache set as a stack.
+Replacement and promotion policies are equal to LRU.
+Two distinct insertion policies, LRU Insertion Policy (LIP) and Binominal Insertion Policy (BIP), are used.
+LIP inserts new blocks at the MRU position.
+BIP inserts new blocks either at the LRU position or with a small probability, $p = \frac{1}{32}$, at the MRU position. 
+The overall DIP algorithm switch between the two insertion policies attempting to always use the one that is expected to cause fewer cache misses.
+
+By mostly inserting at the LRU position the BIP insertion policy can theoretically handle trashing memory access patterns.
+When most new blocks enter at the LRU position, the upper parts of the LRU stack can contain blocks that have been re-referenced.
+In a trashing access pattern, this results in part of the working set residing in the upper part of the stack while the rest are inserted at the LRU position and evicted at the next cache miss.
+By sometimes inserting at the MRU position, BIP will allow some blocks a higher chance of being re-referenced, while also forcing stale cache blocks towards the LRU position. 
+
+The authors of DIP suggests using either set-dueling or ATDs to select between the two insertion policies.
+Set-dueling is implemented by having some of the cache sets always use one of the two algorithms.
+A counter is used to track the performance of the duel-sets.
+Misses in the LIP duel-sets increment the counter while misses in the BIP duel-sets decrement the counter.
+If the MSB of the counter value is one, an overweight of misses in LIP sets are occurring, and BIP is the best performing algorithm. 
+If the MSB is zero, then an overweight of BIP misses are occurring, and LIP is the best performing algorithm.
+All follower sets, sets not used for set-dueling, will switch between the two algorithms based on which is currently causing the best performance.
+The drawback of this solution is that some cache sets always use the less performant of the two algorithms.
+By using ATDs, the entire cache may use the algorithm causing fewer misses.
+The cost is the increased area needed to implement the tag directory structures.
+The original authors compared the two techniques and measured an average decrease in misses by 22.3\% using ATDs, compared to a 21.3\% decrease when using 32 duel-sets~\cite{Qureshi2007} in a 4096 set cache.
+
+\subsection{TADIP}
+Thread-Aware DIP (TADIP)~\cite{Jaleel2008} proposed in 2008 is a of DIP~\cite{Qureshi2007}.
+The main issue with DIP that TADIP counters, is that DIP does not consider which core initiated a cache access.
+In a workload with multiple benchmarks, BIP and LIP performance may way for each core.
+In a shared cache managed by DIP, the algorithm choice is made based on the sum of the cache accesses and then applied equally to all cores.
+The authors of TADIP recognized that improvements in performance could be achieved by selecting the DIP policy on a per-core basis when utilized in a shared cache.
+
+The authors of DIP suggested two techniques for selecting between the two algorithms. 
+When we scale for multiple processors, they both become too expensive to be practical.
+The number of distinct duel sets needed for a single core processor is two as shown earlier.
+If we extend to two processors, there are four distinct combinations of algorithm selection, for 4 cores there are 16 combinations.
+The ATD solution requires two ATD per core.
+Both solutions quickly become impractical.
+To remedy this, the authors of TADIP suggest a modified set-dueling algorithm that only requires 2N distinct duel sets, where N is the number of cores.
+For each core, there is one duel-set per algorithm, misses in these sets modify that core's counter analog to the DIP algorithm.
+When a core accesses a duel-set owned by another core, the accessing core will use the currently best algorithm for that core, as it would in any other normal set.
+Because of this the duel-sets measure the performance of an algorithm for a given core, given the influence of the currently best algorithm of other cores.
+The authors named this implementation TADIP-Feedback, due to the feedback from other cores.
+
+\subsection{DRRIP}
+
+Dynamic Re-Reference Interval Prediction (DRRIP)~\cite{Jaleel2010} was proposed in 2010.
+In DRRIP, each cache block has a number associated with it, called re-reference interval.
+The re-reference interval is a relative measure of when the algorithm expects a block to be re-referenced.
+Given two blocks with different re-reference intervals, then the block with a lower interval is expected to be re-referenced before the other block.
+A value between 0 and $2^M - 1$ is used to represent the re-reference interval.
+M is a configurable variable usually in the interval $[2, 5]$~\cite{Jaleel2010}.
+A re-reference interval of 0 indicates a \textit{near} re-reference, the algorithm expects the block to be re-referenced in the near future.
+The value $2^M - 1$ indicates a \textit{distant} re-reference interval while the value of $2^M - 2$ indicates a \textit{long} re-reference interval.
+Multiple blocks may have the same re-reference interval. 
+Hence, blocks are not strictly ordered as in the LRU stack.
+
+The replacement policy of DRRIP is to scan all blocks and evict the first one found with a distant re-reference interval.
+If no blocks have a distant re-reference interval the re-reference interval of all blocks is incremented by one and the scan restarts.
+This process repeats until the algorithm finds a victim block.
+If multiple blocks are potential victims, the algorithm uses the scan order as a tie-breaker.
+
+DRRIP's promotion policy is to decrement the re-reference interval of the accessed block.
+By doing this DRRIP utilize access history rather than access time when calculating the re-reference interval.
+Hence, to reach a near re-reference interval a block has to be accessed multiple times.
+The insertion policy of DRRIP, like DIP and TADIP, is composed of two different policies and a selection mechanism.
+Static RRIP (SRRIP) will always insert new blocks with a long re-reference interval. 
+Depending on the state of the cache, there might be existing blocks with a higher re-reference interval than the blocks inserted by SRRIP.
+This gives the newly inserted blocks a chance to see a re-reference before being replaced.
+Binomial RRIP (BRRIP) with either insert new blocks with a distant re-reference interval or, with a small probability, insert like SRRIP with a long re-reference interval.
+Like BIP, BRRIP will allow trashing access patterns to keep some of the working set in the cache and hence improve performance over SRRIP.
+The authors suggest using set dueling or ATDs to select between the two algorithms, similar to what was describe for TADIP.
+Selecting between the two insertion policies can be done using set dueling or ATDs, similar to what was described for TADIP.
+
+\subsection{NUCache}
+
+NUCache~\cite{Manikantan2011} was first proposed in 2011.
+NUCache is based on the conscept of delinquent PCs.
+A delinquent PC is the PC value of a memory instruction that often causes cache misses.
+By evaluating the properties of the delinquent PCs, NUCache selects a set of PCs and allocates more cache space to blocks loaded by these instructions.
+Because all applications running may contain one or more delinquent PCs, NUCache will implicitly share the cache between the applications.
+
+\runar{I removed the explanation of the structures used to detect delinquent IPs. It is a really technical discussion, and I'm not sure it adds to the overall understanding of the algorithm.}
+
+NUCache monitors cache accesses from all instructions and uses statistics to select a set of PCs that both cause frequent cache misses and show reuse by referencing the same data repeatedly.
+The algorithm divides the ways in each cache set into two groups; MainWays, and DeliWays.
+The MainWays are managed by LRU while the DeliWays are simply first in first out.
+The value $M$ defines the number of DeliWays.
+NUCache attempts to reduce misses by not evicting blocks from selected delinquent PCs when they are evicted from the MainWays, but rather let them enter the DeliWays.
+By using the value of $M$ and the set of delinquent PCs detected, the algorithm periodically selects a set of PCs that are allowed to use the DeliWays.
+The selection is done using a greedy algorithm that attempts to ensure that each block entering the DeliWays will receive a hit at least once before they are pushed out by other blocks.
+DeliWays and MainWays are implemented by having two extra bits per cache block, one indicating if the block can enter the DeliWays, another indicating if the block is the DeliWays.
+On insertion, all blocks inserted into to the MainWays.
+When the LRU block in the MainWays is about to be replaced, the algorithm checks if it is marked to enter the DeliWays.
+If the block is allowed to enter the DeliWays, it will not be evicted but rather moved from the MainWays.
+If, after moving the new block into the DeliWays, the number of DeliWays blocks has exceeded $M$ the oldest block is removed.
+Otherwise, the new LRU block in the MainWays is evaluated.
+Because of this implementation the MainWays may use the entire cache if no DeliWays are in use, at the same time the DeliWays cannot exceed $M$.
+This allows for an efficient use of every cache set.
+
+
+\subsection{UCP}
+
+Utility Cache Partition (UCP)~\cite{Qureshi2006} was first presented in 2006. 
+UCP uses the concept of utility when assigning ways to a core.
+Using a Utility Monitor (UMON), UCP divides the ways in the cache between the cores.
+UCP then uses the same insertion and promotion policy as LRU.
+The replacement policy is as in LRU but with two modifications:
+First if the number of blocks owned by the requesting core is less than the number of ways assigned to it, then the least recently used block that is not assigned to the requester core is replaced.
+If however the number of blocks owned is greater than or equal to the number of assigned ways the replacement algorithm selects the least recently used block of those owned by the requester.
+This replacement policy ensures that the division between cores in each set move toward the global allocation following cache misses.
+At the same time, a core may use more blocks that it is currently assigned, given that the space is not claimed by any other core.
+
+The UMON is the core of the UCP algorithm.
+It consists of one ATD per core sharing the cache. 
+The ATDs uses the stack property of LRU and counts the number of hits in all valid partition sizes using one hit counter per cache way.
+Based on these hit counters a greedy algorithm divides the cache ways between all cores in an attempt to reduce the overall number of misses.
+
+\subsection{PIPP}
+
+Promotion/Insertion Pseudo-Partitioning (PIPP)~\cite{Xie2009} proposed in 2009 is an algorithm based on a slightly modified UMON circuit and a novel insertion and promotion policy.
+The UMON used by PIPP is extended with stream detection support.
+This allows the algorithm to enforce special policies to cores that are experiencing no or very few re-references.
+An application is said to be streaming if the total number of misses in the ATD is above a set limit, or if the miss-hit ratio is above a threshold.
+
+PIPP treat the cache set as an LRU stack, and the normal LRU replacement policy is used.
+The algorithm introduces a novel insertion and promotion policy.
+The insertion policy inserts new blocks $\pi_n$ blocks from the LRU position. 
+Here $\pi_n$ is the number of ways assigned to the $n^{th}$ core.
+On a cache access, a block has a chance, $p_{prom} = \frac{3}{4}$, to move one position upwards in the stack unless it is already at the MRU position.
+
+On insertion, the PIPP policy does not consider how many blocks are owned by the requesting core, this is unlike UCP's insertion policy that prevents a core from claiming more ways that what it is assigned.
+However, cores with more ways assigned to it will insert its blocks higher up in the stack. 
+The core with the highest number of ways assigned will not have any insertion competition pushing its blocks out of the cache.
+The only way blocks from this core can be pushed out is by other blocks from the same core, or by blocks from other cores that are re-referenced repeatably.
+Two cores with the same allocations will both have an equal chance of keeping their blocks in the cache, as they both insert at the same position.
+Statistically a core with a lower allocation, inserting at a lower position in the stack, should also on average own fewer blocks in the cache compared to a core with a higher allocation.
+This way PIPP obtains what the original authors call pseudo partitioning, where overall a higher allocation will statistically result in more cache space.
+However, the access frequency of cores can cause a core with a low allocation to own most of or all blocks in the cache if the other cores have a much lower access frequency.
+
+When the UMON detects a core that is streaming PIPP will no longer insert blocks from this core at the position given by the allocation.
+A special insertion position, $\pi_{stream}$, is used for all streaming cores.
+$\pi_{stream}$ is set to the number of cores currently streaming. 
+By inserting at this fixed position, PIPP attempts to limit the interference the streaming core has on the non-streaming cores.
+Blocks from streaming applications have a reduced chance of promotion after an access, $p_{stream} = \frac{1}{128}$.
+In the case where all cores are streaming, and there are no cores to protect, PIPP inserts all blocks at the LRU position.
+
+\subsection{PriSM}
+
+PriSM~\cite{Manikantan2012} was first presented in 2012.
+PriSM is a framework for cache management with optimization algorithms targetting multiple performance goals.
+The original paper presents hit maximization, fairness, and QoS goals.
+PriSM utilizes ATDs to estimate private cache performance for each of the cores.
+The ATD will only keep track of total number misses and hits.
+In addition to the ATDs, the algorithm requires three counters per core tracking hits, misses and number of blocks owned by the core in the actual cache.
+PriSM utilizes the same insertion and promotion policies as LRU, but the replacement policy is optimized based on the ATD and the optimization target.
+
+The replacement algorithm of PriSM utilizes eviction probabilities, $E_i$ ($\sum{E_i} = 1$), assigned to each core when selecting a victim block.
+On replacement, a victim core is first selected by a random draw using the eviction probabilities.
+The LRU block owned by the victim core within the cache set is the eviction target.
+In the case where the selected target does not own a block in the set, all blocks owned by cores with $E_i > 0$ are considered, and the LRU of these is the eviction target.
+At set intervals, an optimization algorithm determines the eviction probability, $E_i$, for each core.
+The original paper recalculated $E_i$ values at every 10000 cache miss.
+
+Selecting an eviction probability $E_i$ for each core is done by considering how the eviction probability will effect a core's usage of the cache.
+Consider an interval of W misses where each core contributes a fraction of the misses, $M_i$.
+At the start of the interval the blocks owned by $core_i$ equals a fraction $C_i$ of the total number of blocks in the cache.
+If we do not evict any blocks owned by $core_i$ during the interval, then at the end of the interval the core owns a fraction $T_i$ of the cache.
+$T_i$ is known as the target allocation, and is expressed by $T_i = C_i + M_i * W/N$. 
+Here $M_i * W$ is the number of misses caused by $core_i$ during the interval, which also is the number of blocks inserted by the core.
+$N$ is the total number of blocks in the cache, and the fraction $M_i * W/N$ equals the fraction of the cache claimed by $core_i$ during the interval.
+If the core has a non-zero eviction probability, then this formula extends into $T_i = C_i + (M_i - E_i) * W/N$.
+The above formula can be rearranged to provide a eviction probability given target allocation: $E_i = (C_i - T_i) * N/W + M_i$.
+As noted, PriSM defines three optimization targets, each one of these is responsible for calculating the optimal $T_i$ that will fulfill the optimization target given the data available in the ATDs and per core counters.
+
+\subsection{CLU}
+
+Co-optimizing Locality and Utility (CLU)~\cite{Zhan2014} was first presented in 2014.
+The authors of CLU recognize that recent research in LLC partitioning has followed two distinct directions.
+Some publications optimize for access locality and attempt to improve performance by changing the lifetime of blocks in LRU managed caches.
+DIP, TADIP, NUCache, and PriSM are three such solutions that use novel methods to reduce or extend the lifetime of blocks in an elsewise LRU managed cache.
+Other publications recognize the usefulness of utility and do way-partitioning between cores based on their utility values.
+Examples here are UCP and PIPP.
+Both UCP and PIPP are forced to use LRU as the underlying algorithm because they both depend on the stack property of LRU to do utility calculations~\cite{Qureshi2006, Xie2009}.
+
+The authors of CLU present a novel approach for calculating the utility curve of a BIP managed cache.
+BIP, as covered earlier, is one of the two insertion policies under DIP and TADIP. 
+BIP violates the stack property of LRU because blocks may enter at several places.
+To measure the utility curve of a BIP managed cache k-way cache, k ATDs are needed; ATD($1$), ATD($2$), ... ATD($k$). 
+Where ATD($x$) is an x-way ATD.
+Having $k$ ATDs per core sharing the LLC is not a realistic goal due to the required overhead.
+The authors of CLU propose a simplification where there are $m = log_2 k$ ATDs; ATD($1$), ATD($2^1$), ..., ATD($2^m$).
+A linear increase between the sample points is assumed when calculating the final utility curve.
+It should be noted that the storage overhead of m ATDs in total is less than twice the overhead of the single ATD($k$) required to sample the LRU curve.
+
+CLU uses the two curves first to allocate ways to each core using the same greedy algorithm used by UCP.
+The only difference is that the algorithm uses either the LRU or BIP value when estimating utility given an allocation, depending on which algorithm performs best.
+During runtime, CLU works like UCP.
+The only exception is that the core's ways are managed by either LRU or BIP, depending on which algorithm has the best utility value for the number of ways currently assigned to that core.
