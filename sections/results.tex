@@ -9,26 +9,26 @@ In the following sections we first present performance by core count, we then lo
 \section{Overall Results}
 \label{sec:results:cache_partition}
 
-\begin{figure}[th]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-stp-0128k-0100-avg}
-        \caption{STP (not shown; PIPP 0.55).}
-        \label{fig:results:base:avg:stp}
-    \end{subfigure}%
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-hms-0128k-0100-avg}
-        \caption{HMS (not shown; PIPP 0.61).}
-        \label{fig:results:base:avg:hms}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-mpki-0128k-0100-avg}
-        \caption{MPKI}
-        \label{fig:results:base:avg:mpki}
-    \end{subfigure}
-    \caption[Average result grouped by core]{Average STP, HMS and MPKI normalized to LRU for all workloads, grouped by number of cores.}
-    \label{fig:results:base:avg}
-\end{figure}
+%\begin{figure}[th]
+%    \centering
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-stp-0128k-0100-avg}
+%        \caption{STP (not shown; PIPP 0.55).}
+%        \label{fig:results:base:avg:stp}
+%    \end{subfigure}%
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-hms-0128k-0100-avg}
+%        \caption{HMS (not shown; PIPP 0.61).}
+%        \label{fig:results:base:avg:hms}
+%    \end{subfigure}
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=.8\textwidth]{figures/results/speedup/avg-mpki-0128k-0100-avg}
+%        \caption{MPKI}
+%        \label{fig:results:base:avg:mpki}
+%    \end{subfigure}
+%    \caption[Average result grouped by core]{Average STP, HMS and MPKI normalized to LRU for all workloads, grouped by number of cores.}
+%    \label{fig:results:base:avg}
+%\end{figure}
 
 Figure~\ref{fig:results:base:avg:stp} shows the average speedup of all workloads normalized to LRU and grouped by workload size.
 We observe that most of the implemented algorithms perform close to LRU for the four core workloads.
@@ -76,26 +76,26 @@ The fact that UCP can increase STP while increasing misses, and TADIP and PriSM 
 
 \section{4-core Workload Results}
 
-\begin{figure}[th]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/results/speedup/avg-stp-0128k-0100-4-avg}
-        \caption{STP}
-        \label{fig:results:base:4-avg:stp}
-    \end{subfigure}%
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/results/speedup/avg-hms-0128k-0100-4-avg}
-        \caption{HMS}
-        \label{fig:results:base:4-avg:hms}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/results/speedup/avg-mpki-0128k-0100-4-avg}
-        \caption{MPKI (not shown ca4 pipp 1.9)}
-        \label{fig:results:base:4-avg:mpki}
-    \end{subfigure}
-    \caption[Average result for 4-core workloads]{Average \gls{stp}, \gls{hms} and \gls{mpki} normalized to \gls{lru} for all 4-core workload groups.}
-    \label{fig:results:base:4-avg} 
-\end{figure}
+%\begin{figure}[th]
+%    \centering
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=\textwidth]{figures/results/speedup/avg-stp-0128k-0100-4-avg}
+%        \caption{STP}
+%        \label{fig:results:base:4-avg:stp}
+%    \end{subfigure}%
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=\textwidth]{figures/results/speedup/avg-hms-0128k-0100-4-avg}
+%        \caption{HMS}
+%        \label{fig:results:base:4-avg:hms}
+%    \end{subfigure}
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=\textwidth]{figures/results/speedup/avg-mpki-0128k-0100-4-avg}
+%        \caption{MPKI (not shown ca4 pipp 1.9)}
+%        \label{fig:results:base:4-avg:mpki}
+%    \end{subfigure}
+%    \caption[Average result for 4-core workloads]{Average \gls{stp}, \gls{hms} and \gls{mpki} normalized to \gls{lru} for all 4-core workload groups.}
+%    \label{fig:results:base:4-avg} 
+%\end{figure}
 
 Figure~\ref{fig:results:base:4-avg} shows average STP, HMS, and MPKI normalized to LRU for the different 4-core workload groups.
 Each group contains benchmark with different memory and cache system requirements.
@@ -130,21 +130,21 @@ One interesting fact to note is that both versions of PIPP and UCP are equally g
 This result points to PIPP being able to provide speedups of individual benchmarks that are good enough to raise the average while still performing as good as LRU measured in STP.
 Most likely this indicates that applications marked as streaming are performing badly while those shielded are performing so good their performance increase raises the average.
 
-\begin{figure}[th]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/results/speedup/speedup-stp-0128k-0100-cabw4}
-        \caption{STP}
-        \label{fig:results:base:cabw:stp}
-    \end{subfigure}%
-    \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{figures/results/speedup/speedup-hms-0128k-0100-cabw4}
-        \caption{MPKI}
-        \label{fig:results:base:cabw:mpki}
-    \end{subfigure}
-    \caption[cabw workloads result]{STP and \gls{mpki} normalized to \gls{lru} for cache and bandwidth bound workloads.}
-    \label{fig:results:base:cabw} 
-\end{figure}
+%\begin{figure}[th]
+%    \centering
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=\textwidth]{figures/results/speedup/speedup-stp-0128k-0100-cabw4}
+%        \caption{STP}
+%        \label{fig:results:base:cabw:stp}
+%    \end{subfigure}%
+%    \begin{subfigure}[b]{0.5\textwidth}
+%        \includegraphics[width=\textwidth]{figures/results/speedup/speedup-hms-0128k-0100-cabw4}
+%        \caption{MPKI}
+%        \label{fig:results:base:cabw:mpki}
+%    \end{subfigure}
+%    \caption[cabw workloads result]{STP and \gls{mpki} normalized to \gls{lru} for cache and bandwidth bound workloads.}
+%    \label{fig:results:base:cabw} 
+%\end{figure}
 
 In all our previous findings, we have observed that UCP is raising performance while also increasing misses.
 To ensure that this result is not just an artifact of result averaging, we show the per workload STP and MPKI for the cache and bandwidth bound workloads in Figure~\ref{fig:results:base:cabw}.
