@@ -27,7 +27,7 @@
 	2009 & SHARP Control & \cite{sharpControl} & Fair speedup and QoS & IPC target and miss rate models are input & Way partitioning \\
 	2010 & Re-Reference Interval Prediction (RRIP) & \cite{jaleel10} & Global miss minimization & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
 	2010 & Yu et al. & \cite{yu10} & Off-chip bandwidth minimization & Off-line profiling & Set partitioning \cite{ranganathan00}  \\
-	2010 & Xie et al. & \cite{xie10} & \toni{Fill out if needed} & & \\
+	2010 & Xie et al. & \cite{xie10} & Global miss minimization & ATD (called shadow tags) & Thrasher caging (way partitioning) \\
 	2011 & Wang et al. & \cite{wang11} & Meet deadlines and minimize energy & Off-line profiling & Static way partitioning \\
 	2011 & NUcache & \cite{manikantan11} & Minimize global miss rate & DeliTrack and NUTrack & NUcache \\
 	2011 & Vantage & \cite{sanchez11} & Global miss minimization & ATD & Vantage \\
@@ -171,6 +171,29 @@ Otherwise, the new LRU block in the MainWays is evaluated.
 Because of this implementation the MainWays may use the entire cache if no DeliWays are in use, at the same time the DeliWays cannot exceed $M$.
 This allows for an efficient use of every cache set.
 
+\subsubsection{Reuse Cache}
+
+The Reuse Cache was first introduced in 2013.
+It is an inclusive shared cache in which eviction order depends on how valuable lines are: lines neither present in the private caches nor showing reuse are considered the least valuable and are evicted first; next, lines not present in the private caches but reused are evicted; and, finally, the most valuable lines, those being stored in the private caches, are evicted only when lines of no other types are stored in the set, which should happen rarely.
+
+A \textit{being-used} bit is used to record whether a line is present in any private caches when this information cannot be deduced from a directory. 
+In addition, a line is considered reused when there was at least one hit on it after it was loaded.
+
+Two novel replacement policies implement the process described above: least recently reused (LRR) and not recently reused (NRR), inspired by LRU and NRU, respectively. 
+
+LRR orders the lines of each set in a least recently reused stack depending on their last hit. 
+There is no relative order among non-reused lines, and being-used lines are considered unordered too. 
+Thus, random replacement is employed when a line from these groups has to be evicted. 
+On the other hand, reused lines are victimized according to their reuse order. 
+
+To reduce implementation costs of the LRR stack, NRR adapts the NRU algorithm for tracking reuse, requiring a single NRR bit per line to distinguish the recently reused lines from the not recently reused ones.
+In contrast with NRU, the reuse bit will be unset only on hits, while it will be set on line-fills. 
+Lines with their NRR bit set are considered non-reused and victimized first.
+
+When multiple processes compete for the LLC, both NRR and NRU implicitly evict first those memory blocks coming from streaming applications, as they show no reuse. 
+These policies also give those processes heavily reusing their lines more shared cache capacity.
+Finally, all lines stored in the private caches of all cores are kept in the shared LLC, which may not be the case in other partition policies.
+
 \subsection{Explicit Cache Partitioning Techniques}
 
 \subsubsection{UCP}
@@ -271,3 +294,20 @@ CLU uses the two curves first to allocate ways to each core using the same greed
 The only difference is that the algorithm uses either the LRU or BIP value when estimating utility given an allocation, depending on which algorithm performs best.
 During runtime, CLU works like UCP.
 The only exception is that the core's ways are managed by either LRU or BIP, depending on which algorithm has the best utility value for the number of ways currently assigned to that core.
+
+\subsubsection{CCP}
+
+Cooperative Cache Partitioning (CCP)~\cite{cooperativeCachePartitioning} was first proposed in 2007. 
+Rather than partitioning the cache spatially like in most other partitioning mechanisms, CPP uses Multiple Time-sharing Partitions (MTP) to speed-up one thrashing thread by temporarily shrinking the capacity of other threads. 
+Threads are classified in three categories: (1) \textit{supplier threads} that can supply some or all of their equal-share capacity with no performance loss, (2) \textit{sensitive threads} whose performance changes significantly as cache size varies in the proximity of their equal-share capacity and (3) \textit{thrashing threads} whose working-set is much larger than their equal-share capacity.
+An expanded partition can provide a large speed-up to a thrashing thread when its working set fits in the expanded partition, easily compensating for tiny slowdowns caused by shrinking partitions. 
+
+CCP defines guaranteed partitions as \textit{the minimum amount of cache space required to achieve the same level of performance as using the equal-share cache allocation}, and C$_{expand}$ and C$_{shrink}$ as the capacities used by a thread in its expanding and shrinking partitions, respectively. 
+
+CCP measures each thread's L2 cache miss rates under candidate cache allocations (e.g., with UMON), and uses them to estimate the IPC curve, which is used to calculate each thread's guaranteed partition. 
+Supplier threads are allocated their (small) guaranteed partitions.
+The remaining space is allocated among other threads.
+For this, the CCP partition algorithm calculates C$_{expand}$ and C$_{shrink}$, and returns a set of MTP partitions using a \textit{thrashing thread test} as a simple heuristic.
+Each of these partitions benefits one thrashing thread by starving other thrashing threads with their C$_{shrink}$ capacity, and if one expanding thread can not use all the remaining space, other threads are expanded to further increase speedup. 
+
+CPP finally combines MTP with Cooperative Caching (CC)~\cite{chang06} by dividing execution time into epochs managed by either MTP or CC, weighted by the number of threads that benefit from each of them.
