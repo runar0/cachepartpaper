@@ -1,27 +1,27 @@
 
 \begin{table*}[tp]
-	\caption{Overview of Dynamic Miss Minimizing Cache Partitioning Techniques}
-	\label{tab:cachePartTaxonomy}
-	\begin{tabularx}{\textwidth}{lcXXXX}
-	\toprule
-	Year & Citations & Scheme & Feedback Mechanism & Partitioning Mechanism \\	
-	\midrule
-	2002 & & Suh et al.\ \cite{suh02,dynPartofSharedCacheMemory} & Marginal gain counters & Cache quota partitioning \\	
-	2006 & & Utility Based Cache Partitioning (UCP) \cite{utilityBasedCachePartitioning} & Auxiliary Tag Directory (ATD) & Way Partitioning \\ 
-	2006 & & Dybdahl et al.\ \cite{haakonHiPC} & ATD (called shadow tags) & Way partitioning \\
-	2007 & & Thread-Aware Dynamic Insertion Policy (TADIP) \cite{jaleel08} & Set dueling \cite{shadowTagInsertionPolicies} & TADIP \\
-	2009 & & Promotion/Insertion Pseudo-Partitioning (PIPP) \cite{xie09} & ATD & PIPP \\
-	2010 & & Re-Reference Interval Prediction (RRIP) \cite{jaleel10} & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
-	2010 & & Xie et al.\ \cite{xie10} & ATD (called shadow tags) & Thrasher caging (way partitioning) \\
-	2011 & & NUcache \cite{manikantan11} & DeliTrack and NUTrack & NUcache \\
-	2011 & & Vantage \cite{sanchez11} & ATD & Vantage \\
-	2012 & & Cooperative Partitioning \cite{sundararajan12} & ATD & Column caching variant for energy reduction \\ % Power-directed global miss minimization
-	2012 & & PriSM \cite{manikantan12} & ATD and counters & PriSM \\ % Global miss minimization, fairness and QoS 
-	2012 & & Duong et al.\ \cite{duong12} & Reuse distance distributions &Protecting Distance replacement \\
-	2012 & & Hasenplaugh et al.\ \cite{hasenplaugh12}  & Gradient regions & Adaptive insertion policy \\ % Global miss minimization, IPC and QoS
-	2013 & &  Albericio et al.\ \cite{albericio13}  & Reused bits and beeing-used bits & Least Recently Reused and Not Recently Reused \\ % Global miss minimization (inclusive caches)
-	\bottomrule
-	\end{tabularx}	
+    \caption{Overview of Dynamic Miss Minimizing Cache Partitioning Techniques}
+    \label{tab:cachePartTaxonomy}
+    \begin{tabularx}{\textwidth}{lcXXXX}
+    \toprule
+    Year & Citations & Scheme & Feedback Mechanism & Partitioning Mechanism \\    
+    \midrule
+    *2002 & & Suh et al.\ \cite{suh02,dynPartofSharedCacheMemory} & Marginal gain counters & Cache quota partitioning \\    
+    2006 & & Utility Based Cache Partitioning (UCP) \cite{utilityBasedCachePartitioning} & Auxiliary Tag Directory (ATD) & Way Partitioning \\ 
+    *2006 & & Dybdahl et al.\ \cite{haakonHiPC} & ATD (called shadow tags) & Way partitioning \\
+    2007 & & Thread-Aware Dynamic Insertion Policy (TADIP) \cite{jaleel08} & Set dueling \cite{shadowTagInsertionPolicies} & TADIP \\
+    2009 & & Promotion/Insertion Pseudo-Partitioning (PIPP) \cite{xie09} & ATD & PIPP \\
+    2010 & & Re-Reference Interval Prediction (RRIP) \cite{jaleel10} & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
+    *2010 & & Xie et al.\ \cite{xie10} & ATD (called shadow tags) & Thrasher caging (way partitioning) \\
+    2011 & & NUcache \cite{manikantan11} & DeliTrack and NUTrack & NUcache \\
+    *2011 & & Vantage \cite{sanchez11} & ATD & Vantage \\
+    2012 & & Cooperative Partitioning \cite{sundararajan12} & ATD & Column caching variant for energy reduction \\ % Power-directed global miss minimization
+    2012 & & PriSM \cite{manikantan12} & ATD and counters & PriSM \\ % Global miss minimization, fairness and QoS 
+    *2012 & & Duong et al.\ \cite{duong12} & Reuse distance distributions & Protecting Distance replacement \\
+    *2012 & & Hasenplaugh et al.\ \cite{hasenplaugh12}  & Gradient regions & Adaptive insertion policy \\ % Global miss minimization, IPC and QoS
+    2013 & &  Albericio et al.\ \cite{albericio13}  & Reused bits and beeing-used bits & Least Recently Reused and Not Recently Reused \\ % Global miss minimization (inclusive caches)
+    \bottomrule
+    \end{tabularx}    
 \end{table*}
 
 
@@ -31,6 +31,7 @@
 The older techniques we have implemented are likely cited a lot and then we can argue for why we selected the less cited works.}
 
 \runar{In this section, we should discuss only the works from \ref{tab:cachePartTaxonomy}. Can you update the following sections accordingly and identify any missing discussions?}
+\runar{Magnus: I added stars next to the algorithms missing in the table, and removed the discussion of LRU, DIP and CLU.}
 
 \magnus{Write a paragraph justifying why we chose the five partitioning techniques that we did out of the at least 14 possibilities in the new Table \ref{tab:cachePartTaxonomy}}
 
@@ -38,59 +39,26 @@ The older techniques we have implemented are likely cited a lot and then we can 
 
 \subsection{Implicit Cache Partitioning Techniques}
 
-\subsubsection{LRU}
+\subsubsection{TADIP}
+Thread-Aware DIP (TADIP)~\cite{Jaleel2008} was first proposed in 2008.
+TADIP organizes the cache set as a stack, simular to LRU.
+Like in LRU, blocks that are accessed are promoted to the top of the stack and the block at the bottom of the stack is selected for replacement.
+A new insertion policy Binomial Insertion Policy (BIP) is introduced in addition to the well known LRU Insertion Policy (LIP).
+LIP inserts new blocks the the top of the stack (MRU position).
+BIP inserts new blocks mostly at the bottom of the stack (LRU position), or with a small probability, $p = \frac{1}{32}$, at the MRU position.
+TADIP dymanically switch between LIP and BIP on a per core basis, based on performance measurements using duel-sets.
 
-Least Recently Used (LRU) replacement, or some simplification of LRU, is one of the dominant cache management algorithms in hardware today. 
-LRU is normally used as the baseline when for comparison when evaluating cache management algorithms~\cite{Jaleel2010,Qureshi2006,Qureshi2007}.
-The algorithm relies on temporal locality of cache accesses; recently accessed data will have a higher chance of reuse than less recently used data.
-Theoretically LRU models the cache set as a stack, with recently accessed cache blocks near the top and less recently accessed blocks near the bottom.
-The bottom position of the stack is the LRU position, and the top position is the MRU position.
-New blocks are inserted at the top, and existing blocks that are accessed are moved to the top.
-The block in the bottom position is removed when a new block enters the set.
-In a hardware implementation, the blocks are not stored in a sorted fashion, but additional storage bits are used to keep track of LRU positions.
-
-An important consequence of the LRU algorithm is that it satisfies the \textit{stack property}.
-Considering two LRU managed caches, with 4- and 3-ways.
-If both caches handle the same memory sequence, we know that the state of the upper three ways in both caches will be identical.
-This because new and promoted blocks always enter at the top of the stack, and only the block at the bottom of the stack will be evicted.
-Several algorithms make use of this property to count the number of cache misses in LRU managed caches of varying size.
-In a 4-way cache, if we count the number of accesses to blocks at each way we can deduce the number of misses of any cache smaller than 4-ways. 
-For a 3-way cache, the number of misses is the same as the number of misses in the 4-way cache plus the number of accesses to the fourth way.
-
-\subsubsection{DIP}
-
-Dynamic Insertion Policy (DIP)~\cite{Qureshi2007} was originally proposed in 2007.
-Like LRU, the DIP algorithm views the cache set as a stack, but there are two different insertion policies; LRU Insertion Policy (LIP) and Binominal Insertion Policy (BIP).
-LIP inserts new blocks at the MRU position.
-BIP inserts new blocks either at the LRU position or with a small probability, $p = \frac{1}{32}$, at the MRU position. 
-The overall DIP algorithm switches between the two insertion policies depending on their expected performance.
-
-By mostly inserting at the LRU position the BIP insertion policy can theoretically handle trashing memory access patterns.
+By mostly inserting at the LRU position the BIP insertion policy can handle trashing memory access patterns.
 When most new blocks enter at the LRU position, the upper parts of the LRU stack can contain blocks that have been re-referenced.
 In a trashing access pattern, this results in part of the working set residing in the upper part of the stack while the rest are inserted at the LRU position and evicted at the next cache miss.
 By sometimes inserting at the MRU position, BIP will allow some blocks a higher chance of being re-referenced, while also forcing stale cache blocks towards the LRU position. 
 
-The authors of DIP suggests using either set-dueling or ATDs to select between the two insertion policies.
-In the set-dueling implementation, some sets of the cache are always running one of the two algorithms, and the performance of these sets are measured using a counter.
-All other sets, follower sets, in the cache dynamically switch between the two algorithms depending on which group of duel sets are currently experiencing fewer misses.
-With this solution, the hardware change compared to an LRU managed cache is minimal, but the drawback is that some sets in the cache will always be using the less optimal algorithm.
-The alternative implementation using ATDs enables the entire cache to run the currently best algorithm, at the higher hardware cost of having two extra ATD structures.
-The original authors compared the two techniques and measured an average decrease in misses by 22.3\% using ATDs, compared to a 21.3\% decrease when using 32 duel-sets~\cite{Qureshi2007} in a 4096 set cache.
-
-\subsubsection{TADIP}
-Thread-Aware DIP (TADIP)~\cite{Jaleel2008} proposed in 2008 is a of DIP~\cite{Qureshi2007}.
-TADIP extends the DIP algorithm with individual counters per core. This allows for selecting the best algorithm on a per-core basis, compared to selecting a algorithm based on the combined access pattern from all cores.
-
-For TADIP, both the set-dueling and ATD implementation solutions suggested for DIP scale badly with increasing core count in their original form.
-For the ATD solution, we would need two ATDs per core sharing the cache.
-Set-dueling requires two types of sets for a single core implementation.
-Scaling to two cores requires four distinct duel sets, one for each combination of algorithms.
-At four cores, this is 16 combinations, leaving a decreasing faction of follower sets.
-To remedy this, the authors of TADIP suggest a modified set-dueling algorithm that only requires 2N distinct duel sets, where N is the number of cores.
-For each core, there is one duel-set per algorithm.
-These duel sets are used to track the performance of each algorithm for that particular core, and accesses from other cores are handled as if the set was a normal follower set.
-Because other sets treat the duel sets are a normal follower set, this implementation will measure the performance of an algorithm for a given core, given the influence of the currently best algorithm of other cores.
-The authors named this implementation TADIP-Feedback, due to the feedback from other cores.
+The set-dueling architecture used to detect the best performer of the two algorithms consists of two distinct duel-set per core.
+Each duel-set statically utilizes either LIP or BIP for the given core.
+All other sets, follower sets, dynamically switch between LIP or BIP depending on the performance of the duel-sets.
+When a core accesses an other core's duel-set it behaves simular to when it accesses a follower set.
+Because of this the duel-sets are measuring algorithm performance given the feedback from other cores running their currently best algorithm.
+The authors call this implementation of the algorithm TADIP-Feedback.
 
 \subsubsection{DRRIP}
 
@@ -244,31 +212,6 @@ $N$ is the total number of blocks in the cache, and the fraction $M_i * W/N$ equ
 If the core has a non-zero eviction probability, then this formula extends into $T_i = C_i + (M_i - E_i) * W/N$.
 The above formula can be rearranged to provide a eviction probability given target allocation: $E_i = (C_i - T_i) * N/W + M_i$.
 As noted, PriSM defines three optimization targets, each one of these is responsible for calculating the optimal $T_i$ that will fulfill the optimization target given the data available in the ATDs and per core counters.
-
-\subsubsection{CLU}
-
-Co-optimizing Locality and Utility (CLU)~\cite{Zhan2014} was first presented in 2014.
-The authors of CLU recognize that recent research in LLC partitioning has followed two distinct directions.
-Some publications optimize for access locality and attempt to improve performance by changing the lifetime of blocks in LRU managed caches.
-DIP, TADIP, NUCache, and PriSM are three such solutions that use novel methods to reduce or extend the lifetime of blocks in an elsewise LRU managed cache.
-Other publications recognize the usefulness of utility and do way-partitioning between cores based on their utility values.
-Examples here are UCP and PIPP.
-Both UCP and PIPP are forced to use LRU as the underlying algorithm because they both depend on the stack property of LRU to do utility calculations~\cite{Qureshi2006, Xie2009}.
-
-The authors of CLU present a novel approach for calculating the utility curve of a BIP managed cache.
-BIP, as covered earlier, is one of the two insertion policies under DIP and TADIP. 
-BIP violates the stack property of LRU because blocks may enter at several places.
-To measure the utility curve of a BIP managed cache k-way cache, k ATDs are needed; ATD($1$), ATD($2$), ... ATD($k$). 
-Where ATD($x$) is an x-way ATD.
-Having $k$ ATDs per core sharing the LLC is not a realistic goal due to the required overhead.
-The authors of CLU propose a simplification where there are $m = log_2 k$ ATDs; ATD($1$), ATD($2^1$), ..., ATD($2^m$).
-A linear increase between the sample points is assumed when calculating the final utility curve.
-It should be noted that the storage overhead of m ATDs in total is less than twice the overhead of the single ATD($k$) required to sample the LRU curve.
-
-CLU uses the two curves first to allocate ways to each core using the same greedy algorithm used by UCP.
-The only difference is that the algorithm uses either the LRU or BIP value when estimating utility given an allocation, depending on which algorithm performs best.
-During runtime, CLU works like UCP.
-The only exception is that the core's ways are managed by either LRU or BIP, depending on which algorithm has the best utility value for the number of ways currently assigned to that core.
 
 \subsubsection{CCP}
 
