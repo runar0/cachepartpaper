@@ -1,43 +1,43 @@
 
 \begin{table*}[tp]
-	\caption{Cache Partitioning Technique Overview}
-	\label{tab:cachePartTaxonomy}
-	\begin{tabularx}{\textwidth}{llcXXX}
-	\toprule
-	Year & Scheme & Ref. & Policy & Feedback Mechanism & Partitioning Mechanism \\	
-	\midrule
-	2000 & Column Caching & \cite{columnCaching} & - & - & Column caching (first) \\
-	2002 & Suh et al. & \cite{suh02,dynPartofSharedCacheMemory} & Global miss minimization & Marginal gain counters (first) & Cache quota partitioning (first?) \\
-	2004 & Kim et al. & \cite{fairCacheSharingAndPartitioning} & Fairness & Marginal gain counters & Cache quota partitioning LRU \\
-	2004 & CQoS & \cite{cqos} & Priority-based & - & Set partitioning, selective cache allocation and heterogeneous cache regions \\
-	2006 & Utility Based Cache Partitioning (UCP) & \cite{utilityBasedCachePartitioning} & Global miss minimization & Auxiliary Tag Directory (ATD) & Way Partitioning \\ 
-	2006 & Dybdahl et al. & \cite{haakonHiPC} & Global miss minimization & ATD (called shadow tags) & Way partitioning \\
-	2006 & Settle et al. & \cite{dynReconfCache} & Reuse-based heuristics & Access and reuse counters & Column caching and LRU heuristic \\
-	2006 & Rafique et al. & \cite{osSupportForFairCacheSharing} & OS-based priorities and miss-rate equalization \cite{fairCacheSharingAndPartitioning} & Marginal gain counters and IPC & Way partitioning \\
-	2006 & Hsu et al. & \cite{sharedCachePolicies} & Equal share (Communist) and maximum total benefit (Utilitarian) & - & - \\
-	2006 & STATSHARE & \cite{petoumenos06} & OS: Minimize miss rate, maximize "usefulness", QoS  & Sampled, quantized reuse-distance histograms  & Replace decayed over non-decayed cache lines randomly\\
-	2007 & Cooperative Cache Partitioning (CCP) & \cite{cooperativeCachePartitioning} & Fair speedup and weighted speedup & - & Time-sharing \\
-	2007 & Guo et al. & \cite{qosInCMPs} & QoS with admission policy, resource stealing and speculative downgrade  & ATD & Way partitioning \\
-	2007 & Virtual Private Caches (VPC) & \cite{virtualPrivateCaches} & QoS with IPC targets, fairness policy distributes left-over resources & - & VPC Arbiter (based on network fair queuing) and VPC Capacity Manager (way partitioning) \\
-	2007 & Thread-Aware Dynamic Insertion Policy (TADIP) & \cite{jaleel08} & Global miss rate minimization & Set dueling \cite{shadowTagInsertionPolicies} & TADIP \\
-	2007 & Iyer et al. & \cite{qosPoliciesForCMP} & QoS: Static vs.\ dynamic & Shared unit utilization & Cache quota partitioning per QoS-level \\
-	2009 & FlexDCP & \cite{flexDCP} & OS-guided performance fairness & ATD & Column caching \\
-	2009 & Zhou et al. & \cite{zhou09} & Performance fairness (identical slowdowns) & Overlap counters and ATD & Overalloc counter and modified LRU \\
-	2009 & Promotion/Insertion Pseudo-Partitioning (PIPP) & \cite{xie09} & Global miss minimization & ATD & PIPP \\
-	2009 & SHARP Control & \cite{sharpControl} & Fair speedup and QoS & IPC target and miss rate models are input & Way partitioning \\
-	2010 & Re-Reference Interval Prediction (RRIP) & \cite{jaleel10} & Global miss minimization & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
-	2010 & Yu et al. & \cite{yu10} & Off-chip bandwidth minimization & Off-line profiling & Set partitioning \cite{ranganathan00}  \\
-	2010 & Xie et al. & \cite{xie10} & Global miss minimization & ATD (called shadow tags) & Thrasher caging (way partitioning) \\
-	2011 & Wang et al. & \cite{wang11} & Meet deadlines and minimize energy & Off-line profiling & Static way partitioning \\
-	2011 & NUcache & \cite{manikantan11} & Minimize global miss rate & DeliTrack and NUTrack & NUcache \\
-	2011 & Vantage & \cite{sanchez11} & Global miss minimization & ATD & Vantage \\
-	2012 & Cooperative Partitioning & \cite{sundararajan12} & Power-directed global miss minimization & ATD & Column caching variant for energy reduction \\
-	2012 & PriSM & \cite{manikantan12} & Global miss minimization, fairness and QoS & ATD and counters & PriSM \\
-	2012 & Duong et al. & \cite{duong12} & Global miss minimization & Reuse distance distributions &Protecting Distance replacement \\
-	2012 & Hasenplaugh et al. & \cite{hasenplaugh12} & Global miss minimization, IPC and QoS  & Gradient regions & Adaptive insertion policy \\
-	2013 & Albericio et al. & \cite{albericio13} & Global miss minimization (inclusive caches) & Reused bits and beeing-used bits & Least Recently Reused and Not Recently Reused \\
-	\bottomrule
-	\end{tabularx}	
+    \caption{Cache Partitioning Technique Overview}
+    \label{tab:cachePartTaxonomy}
+    \begin{tabularx}{\textwidth}{llcXXX}
+    \toprule
+    Year & Scheme & Ref. & Policy & Feedback Mechanism & Partitioning Mechanism \\    
+    \midrule
+    2000 & Column Caching & \cite{columnCaching} & - & - & Column caching (first) \\
+    2002 & Suh et al. & \cite{suh02,dynPartofSharedCacheMemory} & Global miss minimization & Marginal gain counters (first) & Cache quota partitioning (first?) \\
+    2004 & Kim et al. & \cite{fairCacheSharingAndPartitioning} & Fairness & Marginal gain counters & Cache quota partitioning LRU \\
+    2004 & CQoS & \cite{cqos} & Priority-based & - & Set partitioning, selective cache allocation and heterogeneous cache regions \\
+    2006 & Utility Based Cache Partitioning (UCP) & \cite{utilityBasedCachePartitioning} & Global miss minimization & Auxiliary Tag Directory (ATD) & Way Partitioning \\ 
+    2006 & Dybdahl et al. & \cite{haakonHiPC} & Global miss minimization & ATD (called shadow tags) & Way partitioning \\
+    2006 & Settle et al. & \cite{dynReconfCache} & Reuse-based heuristics & Access and reuse counters & Column caching and LRU heuristic \\
+    2006 & Rafique et al. & \cite{osSupportForFairCacheSharing} & OS-based priorities and miss-rate equalization \cite{fairCacheSharingAndPartitioning} & Marginal gain counters and IPC & Way partitioning \\
+    2006 & Hsu et al. & \cite{sharedCachePolicies} & Equal share (Communist) and maximum total benefit (Utilitarian) & - & - \\
+    2006 & STATSHARE & \cite{petoumenos06} & OS: Minimize miss rate, maximize "usefulness", QoS  & Sampled, quantized reuse-distance histograms  & Replace decayed over non-decayed cache lines randomly\\
+    2007 & Cooperative Cache Partitioning (CCP) & \cite{cooperativeCachePartitioning} & Fair speedup and weighted speedup & - & Time-sharing \\
+    2007 & Guo et al. & \cite{qosInCMPs} & QoS with admission policy, resource stealing and speculative downgrade  & ATD & Way partitioning \\
+    2007 & Virtual Private Caches (VPC) & \cite{virtualPrivateCaches} & QoS with IPC targets, fairness policy distributes left-over resources & - & VPC Arbiter (based on network fair queuing) and VPC Capacity Manager (way partitioning) \\
+    2007 & Thread-Aware Dynamic Insertion Policy (TADIP) & \cite{jaleel08} & Global miss rate minimization & Set dueling \cite{shadowTagInsertionPolicies} & TADIP \\
+    2007 & Iyer et al. & \cite{qosPoliciesForCMP} & QoS: Static vs.\ dynamic & Shared unit utilization & Cache quota partitioning per QoS-level \\
+    2009 & FlexDCP & \cite{flexDCP} & OS-guided performance fairness & ATD & Column caching \\
+    2009 & Zhou et al. & \cite{zhou09} & Performance fairness (identical slowdowns) & Overlap counters and ATD & Overalloc counter and modified LRU \\
+    2009 & Promotion/Insertion Pseudo-Partitioning (PIPP) & \cite{xie09} & Global miss minimization & ATD & PIPP \\
+    2009 & SHARP Control & \cite{sharpControl} & Fair speedup and QoS & IPC target and miss rate models are input & Way partitioning \\
+    2010 & Re-Reference Interval Prediction (RRIP) & \cite{jaleel10} & Global miss minimization & Set Dueling (for DRRIP and TA-DRRIP) & SRRIP, DRRIP and TA-DRRIP replacement policies \\
+    2010 & Yu et al. & \cite{yu10} & Off-chip bandwidth minimization & Off-line profiling & Set partitioning \cite{ranganathan00}  \\
+    2010 & Xie et al. & \cite{xie10} & Global miss minimization & ATD (called shadow tags) & Thrasher caging (way partitioning) \\
+    2011 & Wang et al. & \cite{wang11} & Meet deadlines and minimize energy & Off-line profiling & Static way partitioning \\
+    2011 & NUcache & \cite{manikantan11} & Minimize global miss rate & DeliTrack and NUTrack & NUcache \\
+    2011 & Vantage & \cite{sanchez11} & Global miss minimization & ATD & Vantage \\
+    2012 & Cooperative Partitioning & \cite{sundararajan12} & Power-directed global miss minimization & ATD & Column caching variant for energy reduction \\
+    2012 & PriSM & \cite{manikantan12} & Global miss minimization, fairness and QoS & ATD and counters & PriSM \\
+    2012 & Duong et al. & \cite{duong12} & Global miss minimization & Reuse distance distributions &Protecting Distance replacement \\
+    2012 & Hasenplaugh et al. & \cite{hasenplaugh12} & Global miss minimization, IPC and QoS  & Gradient regions & Adaptive insertion policy \\
+    2013 & Albericio et al. & \cite{albericio13} & Global miss minimization (inclusive caches) & Reused bits and beeing-used bits & Least Recently Reused and Not Recently Reused \\
+    \bottomrule
+    \end{tabularx}    
 \end{table*}
 
 \magnus{Fix Table \ref{tab:cachePartTaxonomy} such that it only contains work that focuses on global miss minimization}
@@ -54,13 +54,12 @@ The older techniques we have implemented are likely cited a lot and then we can 
 \subsubsection{LRU}
 
 Least Recently Used (LRU) replacement, or some simplification of LRU, is one of the dominant cache management algorithms in hardware today. 
-As a result, LRU is normally used as the baseline for comparisons when presenting new cache management algorithms~\cite{Jaleel2010,Qureshi2006,Qureshi2007}.
-
-The LRU algorithm relies on temporal locality of cache accesses; recently accessed data will have a higher chance of reuse than less recently used data.
-Theoretically one can envision a cache set managed by LRU as a stack, where recently accessed cache blocks are near the top and less recently accessed blocks are near the bottom.
+LRU is normally used as the baseline when for comparison when evaluating cache management algorithms~\cite{Jaleel2010,Qureshi2006,Qureshi2007}.
+The algorithm relies on temporal locality of cache accesses; recently accessed data will have a higher chance of reuse than less recently used data.
+Theoretically LRU models the cache set as a stack, with recently accessed cache blocks near the top and less recently accessed blocks near the bottom.
 The bottom position of the stack is the LRU position, and the top position is the MRU position.
-The replacement policy of LRU is to evict the least recently used cache block, the one on the bottom of the LRU stack.
-The insertion and promotion policy of LRU is the same; a inserted or accessed block is always moved to the MRU position unless it is already there.
+New blocks are inserted at the top, and existing blocks that are accessed are moved to the top.
+The block in the bottom position is removed when a new block enters the set.
 In a hardware implementation, the blocks are not stored in a sorted fashion, but additional storage bits are used to keep track of LRU positions.
 
 An important consequence of the LRU algorithm is that it satisfies the \textit{stack property}.
@@ -74,12 +73,10 @@ For a 3-way cache, the number of misses is the same as the number of misses in t
 \subsubsection{DIP}
 
 Dynamic Insertion Policy (DIP)~\cite{Qureshi2007} was originally proposed in 2007.
-Like LRU, the DIP algorithm view the cache set as a stack.
-Replacement and promotion policies are equal to LRU.
-Two distinct insertion policies, LRU Insertion Policy (LIP) and Binominal Insertion Policy (BIP), are used.
+Like LRU, the DIP algorithm views the cache set as a stack, but there are two different insertion policies; LRU Insertion Policy (LIP) and Binominal Insertion Policy (BIP).
 LIP inserts new blocks at the MRU position.
 BIP inserts new blocks either at the LRU position or with a small probability, $p = \frac{1}{32}$, at the MRU position. 
-The overall DIP algorithm switch between the two insertion policies attempting to always use the one that is expected to cause fewer cache misses.
+The overall DIP algorithm switches between the two insertion policies depending on their expected performance.
 
 By mostly inserting at the LRU position the BIP insertion policy can theoretically handle trashing memory access patterns.
 When most new blocks enter at the LRU position, the upper parts of the LRU stack can contain blocks that have been re-referenced.
@@ -87,34 +84,25 @@ In a trashing access pattern, this results in part of the working set residing i
 By sometimes inserting at the MRU position, BIP will allow some blocks a higher chance of being re-referenced, while also forcing stale cache blocks towards the LRU position. 
 
 The authors of DIP suggests using either set-dueling or ATDs to select between the two insertion policies.
-Set-dueling is implemented by having some of the cache sets always use one of the two algorithms.
-A counter is used to track the performance of the duel-sets.
-Misses in the LIP duel-sets increment the counter while misses in the BIP duel-sets decrement the counter.
-If the MSB of the counter value is one, an overweight of misses in LIP sets are occurring, and BIP is the best performing algorithm. 
-If the MSB is zero, then an overweight of BIP misses are occurring, and LIP is the best performing algorithm.
-All follower sets, sets not used for set-dueling, will switch between the two algorithms based on which is currently causing the best performance.
-The drawback of this solution is that some cache sets always use the less performant of the two algorithms.
-By using ATDs, the entire cache may use the algorithm causing fewer misses.
-The cost is the increased area needed to implement the tag directory structures.
+In the set-dueling implementation, some sets of the cache are always running one of the two algorithms, and the performance of these sets are measured using a counter.
+All other sets, follower sets, in the cache dynamically switch between the two algorithms depending on which group of duel sets are currently experiencing fewer misses.
+With this solution, the hardware change compared to an LRU managed cache is minimal, but the drawback is that some sets in the cache will always be using the less optimal algorithm.
+The alternative implementation using ATDs enables the entire cache to run the currently best algorithm, at the higher hardware cost of having two extra ATD structures.
 The original authors compared the two techniques and measured an average decrease in misses by 22.3\% using ATDs, compared to a 21.3\% decrease when using 32 duel-sets~\cite{Qureshi2007} in a 4096 set cache.
 
 \subsubsection{TADIP}
 Thread-Aware DIP (TADIP)~\cite{Jaleel2008} proposed in 2008 is a of DIP~\cite{Qureshi2007}.
-The main issue with DIP that TADIP counters, is that DIP does not consider which core initiated a cache access.
-In a workload with multiple benchmarks, BIP and LIP performance may way for each core.
-In a shared cache managed by DIP, the algorithm choice is made based on the sum of the cache accesses and then applied equally to all cores.
-The authors of TADIP recognized that improvements in performance could be achieved by selecting the DIP policy on a per-core basis when utilized in a shared cache.
+TADIP extends the DIP algorithm with individual counters per core. This allows for selecting the best algorithm on a per-core basis, compared to selecting a algorithm based on the combined access pattern from all cores.
 
-The authors of DIP suggested two techniques for selecting between the two algorithms. 
-When we scale for multiple processors, they both become too expensive to be practical.
-The number of distinct duel sets needed for a single core processor is two as shown earlier.
-If we extend to two processors, there are four distinct combinations of algorithm selection, for 4 cores there are 16 combinations.
-The ATD solution requires two ATD per core.
-Both solutions quickly become impractical.
+For TADIP, both the set-dueling and ATD implementation solutions suggested for DIP scale badly with increasing core count in their original form.
+For the ATD solution, we would need two ATDs per core sharing the cache.
+Set-dueling requires two types of sets for a single core implementation.
+Scaling to two cores requires four distinct duel sets, one for each combination of algorithms.
+At four cores, this is 16 combinations, leaving a decreasing faction of follower sets.
 To remedy this, the authors of TADIP suggest a modified set-dueling algorithm that only requires 2N distinct duel sets, where N is the number of cores.
-For each core, there is one duel-set per algorithm, misses in these sets modify that core's counter analog to the DIP algorithm.
-When a core accesses a duel-set owned by another core, the accessing core will use the currently best algorithm for that core, as it would in any other normal set.
-Because of this the duel-sets measure the performance of an algorithm for a given core, given the influence of the currently best algorithm of other cores.
+For each core, there is one duel-set per algorithm.
+These duel sets are used to track the performance of each algorithm for that particular core, and accesses from other cores are handled as if the set was a normal follower set.
+Because other sets treat the duel sets are a normal follower set, this implementation will measure the performance of an algorithm for a given core, given the influence of the currently best algorithm of other cores.
 The authors named this implementation TADIP-Feedback, due to the feedback from other cores.
 
 \subsubsection{DRRIP}
@@ -150,12 +138,10 @@ Selecting between the two insertion policies can be done using set dueling or AT
 \subsubsection{NUCache}
 
 NUCache~\cite{Manikantan2011} was first proposed in 2011.
-NUCache is based on the conscept of delinquent PCs.
+NUCache is based on the concept of delinquent PCs.
 A delinquent PC is the PC value of a memory instruction that often causes cache misses.
 By evaluating the properties of the delinquent PCs, NUCache selects a set of PCs and allocates more cache space to blocks loaded by these instructions.
 Because all applications running may contain one or more delinquent PCs, NUCache will implicitly share the cache between the applications.
-
-\runar{I removed the explanation of the structures used to detect delinquent IPs. It is a really technical discussion, and I'm not sure it adds to the overall understanding of the algorithm.}
 
 NUCache monitors cache accesses from all instructions and uses statistics to select a set of PCs that both cause frequent cache misses and show reuse by referencing the same data repeatedly.
 The algorithm divides the ways in each cache set into two groups; MainWays, and DeliWays.
