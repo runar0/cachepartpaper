@@ -1,1 +1,14 @@
-Write abstract
+Chip multiprocessors (CMPs) commonly share the Last Level Cache (LLC) to improve resource utilization.
+Thus, co-running processes compete for cache space which can result in significant and unpredictable performance loss.
+The performance impact of this problem can be reduced by intelligently partitioning the LLC between processes, and a considerable amount of research that propose new LLC partitioning techniques exists.
+Partitioning techniques tend to partially overlap, but this overlap can be hard to identify.
+This problem is exacerbated by the sheer volume of techniques available.
+Furthermore, researchers commonly compare their proposed technique to a limited number of competing schemes.
+Thus, there is a real risk that researchers reinvent old ideas instead of identifying novel concepts.
+
+In this work, we propose to classify LLC partitioning techniques along three axes.
+The \emph{policy} defines the performance-related goal which partitioning is to achieve, the \emph{feedback mechanism} gathers information about the LLC requirements of the currently running processes and the \emph{partitioning mechanism} select and enforce partitions.
+We apply this classification scheme to dynamic partitioning techniques with a miss minimizing policy and identify the amount of overlap.
+In addition, we implement and compare the high-impact TADIP, DRRIP, UCP, PIPP and PriSM partitioning techniques.
+UCP is the oldest of the compared techniques but still the top performer.
+This indicates that more rigorous evaluation is necessary to ensure that new partitioning techniques are in fact an improvement over previous work.

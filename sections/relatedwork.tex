@@ -1,4 +1,26 @@
-\magnus{Add the references that are removed from the Table \ref{tab:cachePartTaxonomy} here and discuss them.
-Currently, it seems that they can be partitioned into techniques supporting the OS and techniques that focus on QoS.}
 
-\toni{Dense discussion of works we did not cover earlier.}
+\toni{Can you write this section and include any missing work? (remnants of overview table below)}
+		
+QoS:
+2004 , CQoS , \cite{cqos} , Priority-based , - , Set partitioning, selective cache allocation and heterogeneous cache regions  
+2006 , STATSHARE , \cite{petoumenos06} , OS: Minimize miss rate, maximize "usefulness", QoS  , Sampled, quantized reuse-distance histograms  , Replace decayed over non-decayed cache lines randomly 	
+2007 , Guo et al. , \cite{qosInCMPs} , QoS with admission policy, resource stealing and speculative downgrade  , ATD , Way partitioning  
+2007 , Virtual Private Caches (VPC) , \cite{virtualPrivateCaches} , QoS with IPC targets, fairness policy distributes left-over resources , - , VPC Arbiter (based on network fair queuing) and VPC Capacity Manager (way partitioning) 
+2007 , Iyer et al. , \cite{qosPoliciesForCMP} , QoS: Static vs.\ dynamic , Shared unit utilization , Cache quota partitioning per QoS-level  
+
+Fairness:
+2004 , Kim et al. , \cite{fairCacheSharingAndPartitioning} , Fairness , Marginal gain counters , Cache quota partitioning LRU  
+2006 , Rafique et al. , \cite{osSupportForFairCacheSharing} , OS-based priorities and miss-rate equalization \cite{fairCacheSharingAndPartitioning} , Marginal gain counters and IPC , Way partitioning  	
+2007 , Cooperative Cache Partitioning (CCP) , \cite{cooperativeCachePartitioning} , Fair speedup and weighted speedup , - , Time-sharing  	
+2009 , Zhou et al. , \cite{zhou09} , Performance fairness (identical slowdowns) , Overlap counters and ATD , Overalloc counter and modified LRU  	
+2009 , SHARP Control , \cite{sharpControl} , Fair speedup and QoS , IPC target and miss rate models are input , Way partitioning  	
+2009 , FlexDCP , \cite{flexDCP} , OS-guided performance fairness , ATD , Column caching  
+		
+Offline profiling:
+2010 , Yu et al. , \cite{yu10} , Off-chip bandwidth minimization , Off-line profiling , Set partitioning \cite{ranganathan00} Note: this is miss minimization but out since it is based on off-line profiling  	
+2011 , Wang et al. , \cite{wang11} , Meet deadlines and minimize energy , Off-line profiling , Static way partitioning  	
+
+Other:
+2000 , Column Caching , \cite{columnCaching} , - , - , Column caching (first)  
+2006 , Hsu et al. , \cite{sharedCachePolicies} , Equal share (Communist) and maximum total benefit (Utilitarian) , - , -  
+2006 , Settle et al. , \cite{dynReconfCache} , Reuse-based heuristics , Access and reuse counters , Column caching and LRU heuristic  
