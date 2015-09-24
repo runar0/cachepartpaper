@@ -44,9 +44,9 @@ Thread-Aware DIP (TADIP)~\cite{Jaleel2008} was first proposed in 2008.
 TADIP organizes the cache set as a stack, simular to LRU.
 Like in LRU, blocks that are accessed are promoted to the top of the stack and the block at the bottom of the stack is selected for replacement.
 A new insertion policy Binomial Insertion Policy (BIP) is introduced in addition to the well known LRU Insertion Policy (LIP).
-LIP inserts new blocks the the top of the stack (MRU position).
+LIP inserts new blocks the op of the stack (MRU position).
 BIP inserts new blocks mostly at the bottom of the stack (LRU position), or with a small probability, $p = \frac{1}{32}$, at the MRU position.
-TADIP dymanically switch between LIP and BIP on a per core basis, based on performance measurements using duel-sets.
+TADIP dynamically switch between LIP and BIP on a per-core basis, based on performance measurements using duel-sets.
 
 By mostly inserting at the LRU position the BIP insertion policy can handle trashing memory access patterns.
 When most new blocks enter at the LRU position, the upper parts of the LRU stack can contain blocks that have been re-referenced.
@@ -56,7 +56,7 @@ By sometimes inserting at the MRU position, BIP will allow some blocks a higher 
 The set-dueling architecture used to detect the best performer of the two algorithms consists of two distinct duel-set per core.
 Each duel-set statically utilizes either LIP or BIP for the given core.
 All other sets, follower sets, dynamically switch between LIP or BIP depending on the performance of the duel-sets.
-When a core accesses an other core's duel-set it behaves simular to when it accesses a follower set.
+When a core accesses another core's duel-set, it behaves similar to when it accesses a follower set.
 Because of this the duel-sets are measuring algorithm performance given the feedback from other cores running their currently best algorithm.
 The authors call this implementation of the algorithm TADIP-Feedback.
 
