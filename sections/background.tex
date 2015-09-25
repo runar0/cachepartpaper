@@ -185,6 +185,11 @@ By inserting at this fixed position, PIPP attempts to limit the interference the
 Blocks from streaming applications have a reduced chance of promotion after an access, $p_{stream} = \frac{1}{128}$.
 In the case where all cores are streaming, and there are no cores to protect, PIPP inserts all blocks at the LRU position.
 
+A potential issue with PIPP which may cause performance degregation in some cases have been documented by previous works~\cite{Manikantan2012}.
+The observation is that blocks are replaced too quicly, before seeing any real re-use.
+On proposed solution is to add a constant to the insertion offset $\pi_n$.
+In additon to PIPP, we have implemented PIPP-min8 where we add the constant value 8 to any insertion position.
+
 \subsubsection{PriSM}
 
 PriSM~\cite{Manikantan2012} was first presented in 2012.

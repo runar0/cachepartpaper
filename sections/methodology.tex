@@ -16,12 +16,15 @@
                                     & 128 rob entries, 4 inst. commit width, \\
                                     & 3 Int. ALU, 1 FP MUL/DIV, 1 FP ADD, \\
                                     & 2 Int. SSE ALU, 1 Int. SSE MUL \\
-\bf{Private L1 inst.}               & 32kB, 64B block-size, 4-way, 8 MSHRs, LRU \\
-\bf{Private L1 data}                & 32kB, 64B block-size, 8-way, 8 MSHRs, LRU \\
-\bf{Private L2 unified cache}       & 128/256/512/1024kB, 64B block-size, 8-way, \\
-                                    & 12 MSHRs, LRU      \\
-\bf{Shared L3 cache}                & 4/8/16/32MB, 64B block-size, 24 MSHRs, \\
-                                    & 32-way, varying replacement algorithm         \\
+\bf{Private L1 inst.}               & 32kB, 64B block-size, 4-way, 8 MSHRs, 
+									& LRU, Tag/Data 1/1 cycles \\
+\bf{Private L1 data}                & 32kB, 64B block-size, 8-way, 8 MSHRs, 
+									& LRU, Tag/Data 1/2 cycles \\
+\bf{Private L2 unified cache}       & 128kB, 64B block-size, 8-way, \\
+                                    & 12 MSHRs, LRU, Tag/Data 1/2 cycles     \\
+\bf{Shared L3 cache}                & 4/8/16MB, 64B block-size, 24 MSHRs, \\
+                                    & 32-way, varying replacement algorithm
+                                    & Tag/Data 2/5, 2/6, 3/7, 3/9 cycles         \\
 \bf{Memory controller}              & 6.4GB/s, 100ns access latency         \\
 \bf{Clock Skew}                     & 100 cycle barrier synchronization        \\
 \bottomrule                             
@@ -38,16 +41,9 @@ We are using the Nehalem core model in Sniper and have selected our processor co
 We do note that in more recent architectures such as Intel's Haswell~\cite{Jain2013} the core properties have changed compared to the older Nehalem, but the size of the first level cache remains the same.
 The reason being that with increasing cache size the access latency increases making it cache unable to feed the processor pipeline with a sufficient stream of instructions and data.
 
-For our second cache layer, we select four different size configurations.
-We use these configurations to evaluate how private cache size affects shared cache behavior.
-We vary the size of the third level cache depending on the number of cores used in the experiment.
 For 4-, 8- and 16-core simulations we will respectively use a 4MB, 8MB, and 16MB L3 configuration.
 CACTI~\cite{Shivakumar2001} is used to estimate cache latencies for all cache levels.
 We configure CACTI to use high-performance storage cells and optimize towards lower access latencies.
-
-\runar{Figure out how to present latency values in a table without filling half a page ...}
-\runar{Depending on which results we'll include, we might only have one second-level cache configuration}
-\runar{Section about the limited memory model in sniper? or in a later section?}
 
 \subsection{Benchmarks and Workloads}
 \label{sec:methodology:benchmarks}
@@ -78,8 +74,6 @@ The ca and cabw groups contain 5 workloads while the bw and co groups contain 10
 There is only a single class of 8 and 16 core workloads, as there are not enough benchmarks per group to make workloads of this size. 
 The ten 8 and 16 core workloads contain benchmarks from across all benchmark groups.
 
-\runar{Specifying all workloads in each group will take multiple pages, but it might not be ok to leave out?}
-
 \subsection{Metrics}
 \label{sec:methodology:metrics}
 We utilize two metrics to measure the effect of destructive interference between benchmarks in multicore simulations.
@@ -107,4 +101,4 @@ HMS is therefore by definition the reciprocal of Average Normalized Turnaround T
  {HMS} = \frac{k}{{\sum\limits_{n=1}^{k}\frac{1}{\frac{T^{P}_i}{T^{S}_i}}}} = \frac{k}{{\sum\limits_{n=1}^{k}\frac{T^{S}_i}{T^{P}_i}}}
 \end{equation}
 
-\runar{MPKI might be well enough know to skip the definition?}
+Finally, we measure cache misses per kilo instruction, MPKI, for all experiments.
