@@ -39,7 +39,7 @@ The older techniques we have implemented are likely cited a lot and then we can 
 \subsection{Implicit Cache Partitioning Techniques}
 
 \subsubsection{TADIP}
-Thread-Aware DIP (TADIP)~\cite{Jaleel2008} was first proposed in 2008.
+Thread-Aware Dynamic Insertion Policy (TADIP)~\cite{jaleel08} was first proposed in 2008.
 TADIP organizes the cache set as a stack, simular to LRU.
 Like in LRU, blocks that are accessed are promoted to the top of the stack and the block at the bottom of the stack is selected for replacement.
 A new insertion policy Binomial Insertion Policy (BIP) is introduced in addition to the well known LRU Insertion Policy (LIP).
@@ -61,12 +61,12 @@ The authors call this implementation of the algorithm TADIP-Feedback.
 
 \subsubsection{DRRIP}
 
-Dynamic Re-Reference Interval Prediction (DRRIP)~\cite{Jaleel2010} was proposed in 2010.
+Dynamic Re-Reference Interval Prediction (DRRIP)~\cite{jaleel10} was proposed in 2010.
 In DRRIP, each cache block has a number associated with it, called re-reference interval.
 The re-reference interval is a relative measure of when the algorithm expects a block to be re-referenced.
 Given two blocks with different re-reference intervals, then the block with a lower interval is expected to be re-referenced before the other block.
 A value between 0 and $2^M - 1$ is used to represent the re-reference interval.
-M is a configurable variable usually in the interval $[2, 5]$~\cite{Jaleel2010}.
+M is a configurable variable usually in the interval $[2, 5]$~\cite{jaleel10}.
 A re-reference interval of 0 indicates a \textit{near} re-reference, the algorithm expects the block to be re-referenced in the near future.
 The value $2^M - 1$ indicates a \textit{distant} re-reference interval while the value of $2^M - 2$ indicates a \textit{long} re-reference interval.
 Multiple blocks may have the same re-reference interval. 
@@ -91,7 +91,7 @@ Selecting between the two insertion policies can be done using set dueling or AT
 
 \subsubsection{NUCache}
 
-NUCache~\cite{Manikantan2011} was first proposed in 2011.
+NUCache~\cite{manikantan11} was first proposed in 2011.
 NUCache is based on the concept of delinquent PCs.
 A delinquent PC is the PC value of a memory instruction that often causes cache misses.
 By evaluating the properties of the delinquent PCs, NUCache selects a set of PCs and allocates more cache space to blocks loaded by these instructions.
@@ -148,7 +148,7 @@ Finally, all lines stored in the private caches of all cores are kept in the sha
 
 \subsubsection{UCP}
 
-Utility Cache Partition (UCP)~\cite{Qureshi2006} was first presented in 2006. 
+Utility Cache Partition (UCP)~\cite{utilityBasedCachePartitioning} was first presented in 2006. 
 UCP uses the concept of utility when assigning ways to a core.
 Using a Utility Monitor (UMON), UCP divides the ways in the cache between the cores.
 UCP then uses the same insertion and promotion policy as LRU.
@@ -165,7 +165,7 @@ Based on these hit counters a greedy algorithm divides the cache ways between al
 
 \subsubsection{PIPP}
 
-Promotion/Insertion Pseudo-Partitioning (PIPP)~\cite{Xie2009} proposed in 2009 is an algorithm based on a slightly modified UMON circuit and a novel insertion and promotion policy.
+Promotion/Insertion Pseudo-Partitioning (PIPP)~\cite{xie09} proposed in 2009 is an algorithm based on a slightly modified UMON circuit and a novel insertion and promotion policy.
 The UMON used by PIPP is extended with stream detection support.
 This allows the algorithm to enforce special policies to cores that are experiencing no or very few re-references.
 An application is said to be streaming if the total number of misses in the ATD is above a set limit, or if the miss-hit ratio is above a threshold.
@@ -192,14 +192,14 @@ By inserting at this fixed position, PIPP attempts to limit the interference the
 Blocks from streaming applications have a reduced chance of promotion after an access, $p_{stream} = \frac{1}{128}$.
 In the case where all cores are streaming, and there are no cores to protect, PIPP inserts all blocks at the LRU position.
 
-A potential issue with PIPP which may cause performance degregation in some cases have been documented by previous works~\cite{Manikantan2012}.
+A potential issue with PIPP which may cause performance degregation in some cases have been documented by previous works~\cite{manikantan12}.
 The observation is that blocks are replaced too quicly, before seeing any real re-use.
 On proposed solution is to add a constant to the insertion offset $\pi_n$.
 In additon to PIPP, we have implemented PIPP-min8 where we add the constant value 8 to any insertion position.
 
 \subsubsection{PriSM}
 
-PriSM~\cite{Manikantan2012} was first presented in 2012.
+PriSM~\cite{manikantan12} was first presented in 2012.
 PriSM is a framework for cache management with optimization algorithms targetting multiple performance goals.
 The original paper presents hit maximization, fairness, and QoS goals.
 PriSM utilizes ATDs to estimate private cache performance for each of the cores.
