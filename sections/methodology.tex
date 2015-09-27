@@ -34,7 +34,7 @@
 \end{table}
 
 In this paper, we model a CMP model with two levels of private cache and a shared third layer.
-This model is simulated using the Sniper~\cite{Carlson2011a} simulation system.
+This model is simulated using the Sniper~\cite{Carlson2011} simulation system.
 An overview of the system is shown in Figure~\ref{fig:processor_model}, and Table~\ref{tbl:processor_model:properties} lists the system properties.
 
 We are using the Nehalem core model in Sniper and have selected our processor core properties and first level cache size based on the original Intel Nehalem~\cite{Thomadakis2011}. 
@@ -42,13 +42,13 @@ We do note that in more recent architectures such as Intel's Haswell~\cite{Jain2
 The reason being that with increasing cache size the access latency increases making it cache unable to feed the processor pipeline with a sufficient stream of instructions and data.
 
 For 4-, 8- and 16-core simulations we will respectively use a 4MB, 8MB, and 16MB L3 configuration.
-CACTI~\cite{Shivakumar2001} is used to estimate cache latencies for all cache levels.
+CACTI~\cite{cacti4} is used to estimate cache latencies for all cache levels.
 We configure CACTI to use high-performance storage cells and optimize towards lower access latencies.
 
 \subsection{Benchmarks and Workloads}
 \label{sec:methodology:benchmarks}
 In all our experiments, we are utilizing benchmarks from the SPEC CPU2006~\cite{SPECCPU2006} benchmark suite. 
-We use SimPoint~\cite{Hamerly2005} to extract 250M instruction intervals from each benchmark that we use in all experiments.
+We use SimPoint~\cite{simpoint30} to extract 250M instruction intervals from each benchmark that we use in all experiments.
 By only extracting a single interval we are willingly increasing the error~\cite{Hamerly2004} between our interval and the results obtained by simulating the entire benchmark.
 In our experiments, we are interested in observing performance change in our simulated intervals due to architectural changes.
 Producing results comparable to the results of the full benchmark run is not required to achieve this.
