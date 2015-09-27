@@ -132,17 +132,22 @@ Most likely this indicates that applications marked as streaming are performing 
 
 \begin{figure*}[t]
     \centering
-    \begin{subfigure}[b]{0.5\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=\textwidth]{figures/results/speedup-stp-0128k-0100-cabw4}
         \caption{STP}
         \label{fig:results:base:cabw:stp}
     \end{subfigure}%
-    \begin{subfigure}[b]{0.5\textwidth}
+    \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=\textwidth]{figures/results/speedup-hms-0128k-0100-cabw4}
+        \caption{HMS}
+        \label{fig:results:base:cabw:hms}
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{figures/results/speedup-mpki-0128k-0100-cabw4}
         \caption{MPKI}
         \label{fig:results:base:cabw:mpki}
     \end{subfigure}
-    \caption[cabw workloads result]{STP and MPKI normalized to LRU for cache and bandwidth bound workloads.}
+    \caption[cabw workloads result]{STP, HMS, and MPKI normalized to LRU for cache and bandwidth bound workloads.}
     \label{fig:results:base:cabw} 
 \end{figure*}
 
